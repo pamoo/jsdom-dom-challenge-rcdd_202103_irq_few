@@ -1,43 +1,51 @@
-"use strict";
-function _toConsumableArray(a){
-  if(Array.isArray(a))
-  {
-    for(let b=0,c=Array(a.length);b<a.length;b++)
-    c[b]=a[b];
-    return c;
+document.addEventListener('DOMContentLoaded', (event) => {
+  const counter=document.getElementById('counter')
+  const minus=document.getElementById('minus')
+  const plus=document.getElementById('plus')
+  const pause=document.getElementById('pause')
+  const like=document.getElementById('heart')
+  const likeList=document.getElementsByTagName('ul')[0]
+  const form=document.getElementById('comment-form')
+  const commentList=document.getElementById('list')
+  const comment=document.getElementById('comment-input')
+
+  let isPlaying=true;
+  const likes=[]
+
+  const increment=()=>{
+    counter.textContent=Number(counter.textContent)+1;
   }
-  return Array.from(a)
-}
-  let playing=!0,
-  timer=function(){
-    return setInterval(function(){
-      let a=document.getElementById("counter"),b=parseInt(a.innerText);
-      a.innerText=b+1},1e3)
+
+
+  const decrement=()=>{
+    counter.textContent=Number(counter.textContent)-1;
+  }
+
+  const interval=setInterval(()=>{isPlaying?increment():null},1000)
+
+    plus.onclick=()=>increment()
+    minus.onclick=()=>decrement()
+    pause.onclick=()=>{
+      isPlaying=!isPlaying
+      minus.disabled=!minus.disabled
+      plus.disabled=!plus.disabled
+      like.disabled=!like.disabled
+      isPlaying?pause.innerText='pause':pause.innerText="resume";
     }
-      interval=timer(),minus=document.getElementById("minus"),
-      plus=document.getElementById("plus"),
-      heart=document.getElementById("heart"),
-      pause=document.getElementById("pause"),
-      commentForm=document.getElementsByTagName("form")[0],
-      minus.addEventListener("click",function(){
-      let a=document.getElementById("counter"),
-      b=parseInt(a.innerText),
-      a.innerText=b-1}),
-      plus.addEventListener("click",function(){
-      let a=document.getElementById("counter"),
-      b=parseInt(a.innerText),
-      a.innerText=b+1}),
-      heart.addEventListener("click",function(){
-        let a=document.getElementById("counter"),
-        b=parseInt(a.innerText),
-        c=document.querySelector(".likes"),
-        d=void 0;
-        if([].concat(_toConsumableArray(c.children)).map(function(a){
-          return parseInt(a.dataset.num)}).includes(b)){
-            d=document.querySelector('[data-num="'+b+'"]');
-            let e=parseInt(d.children[0].innerText);
-            d.innerHTML=b+" has been liked <span>"+(e+1)+"</span> times"}
-            else(d=document.createElement("li")).setAttribute("data-num",b);
-            d.innerHTML=b+" has been liked <span>1</span> time";
-            c.appendChild(d)}),pause.addEventListener("click",function(){
-              playing?(playing=!1,clearInterval(interval),this.innerText="resume"):(playing=!0,interval=timer(),this.innerText="pause"),[].concat(_toConsumableArray(document.getElementsByTagName("button"))).forEach(function(a){"pause"!==a.id&&(a.disabled=!playing)})}),commentForm.addEventListener("submit",function(a){a.preventDefault();var b=this.children[0],c=b.value;b.value="";var d=document.querySelector(".comments"),e=document.createElement("p");e.innerText=c,d.appendChild(e)});
+
+    like.onclick=()=>{
+      likeList.innerHTML=''
+      likes[Number(counter.textContent)]?likes[Number(counter.textContent)]+=1:likes[Number(counter.textContent)]=1
+
+        likes.forEach((like,i)=>{
+          const li=document.createElement('li')
+          li.innerHTML=`${i} has been liked ${like} ${like>1?'times':'time'}` 
+          likeList.append(li)
+        })
+    }
+
+    form.onsubmit=(e)=>{
+      e.preventDefault()
+      list.innerHTML+=`<p>${comment.value}</p>`
+    }
+}); 
